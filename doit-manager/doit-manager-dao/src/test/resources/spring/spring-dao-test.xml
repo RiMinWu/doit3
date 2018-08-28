@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+">
+    <!--鍔犺浇db.properties-->
+    <context:property-placeholder location="classpath:db-test.properties"/>
+
+    <!--閰嶇疆鏁版嵁搴撹繛鎺ユ睜-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!--閰嶇疆鍩烘湰灞炴��-->
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <!--浼樺寲灞炴��-->
+        <property name="defaultAutoCommit" value="false"/>
+    </bean>
+
+    <!--閰嶇疆mybatis鐨勪細璇濆伐鍘�-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--閰嶇疆鏁版嵁婧�-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--鍔犺浇mybatis鐨勪富閰嶇疆鏂囦欢-->
+        <property name="configLocation" value="classpath:mybatis/mybatis-config-test.xml"/>
+    </bean>
+
+    <!--閰嶇疆DAO灞傛帴鍙ｆ壂鎻�-->
+    <!--鍥犱负杩欎釜绫荤殑瀛樺湪锛岄偅涔堟墠涓嶉渶瑕佸皢DAO鎺ュ彛杩涜瀹炵幇-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--娉ㄥ叆浼氳瘽宸ュ巶-->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <!--娉ㄥ叆鎵弿鍩虹鍖呯殑浣嶇疆-->
+        <property name="basePackage" value="com.qf.shop.manager.dao"/>
+    </bean>
+
+    <!--鎵弿鍙﹀鐨勬敞瑙ｇ被-->
+    <!--<context:component-scan base-package="com.qf.shop.manager.dao"/>-->
+</beans>
